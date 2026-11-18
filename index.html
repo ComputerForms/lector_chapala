@@ -1,55 +1,152 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f5f8;
+        }
+
+        /* Pantalla de acceso */
         #login-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: linear-gradient(135deg, #0b3558, #125c83, #0b3558);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10000;
+            padding: 20px;
         }
+
         #login-box {
-            background: #1a2a6c;
-            padding: 30px;
-            border-radius: 10px;
-            color: white;
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 18px;
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            border-top: 6px solid #d4a437;
         }
+
+        .municipio-header {
+            margin-bottom: 25px;
+        }
+
+        .municipio-header h1 {
+            color: #0b3558;
+            font-size: 24px;
+            margin: 15px 0 5px;
+            letter-spacing: 1px;
+        }
+
+        .municipio-header h2 {
+            color: #d4a437;
+            font-size: 15px;
+            margin: 0;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo-container {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: #f3f5f8;
+            border: 3px solid #d4a437;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .logo-container img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+        }
+
+        .logo-placeholder {
+            font-size: 45px;
+            color: #0b3558;
+        }
+
+        .welcome-text {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
         #login-box input {
             display: block;
             margin: 15px auto;
-            padding: 12px;
-            width: 80%;
-            border: none;
-            border-radius: 5px;
+            padding: 14px;
+            width: 100%;
+            border: 1px solid #dce2e8;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+            background: #f8fafc;
+            transition: 0.3s;
         }
+
+        #login-box input:focus {
+            border-color: #125c83;
+            box-shadow: 0 0 5px rgba(18,92,131,0.2);
+        }
+
         #login-btn {
-            background: #ffffff;
-            color: #1a2a6c;
+            width: 100%;
+            background: #0b3558;
+            color: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
+            padding: 14px;
+            border-radius: 8px;
             font-weight: bold;
+            font-size: 15px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 15px;
+            transition: 0.3s;
         }
+
+        #login-btn:hover {
+            background: #125c83;
+            transform: translateY(-2px);
+        }
+
         #error-msg {
-            color: #ff6b6b;
-            margin-top: 10px;
+            color: #d93025;
+            margin-top: 15px;
             display: none;
+            font-size: 14px;
         }
-        .hidden {
-            display: none;
+
+        .footer-text {
+            color: #777;
+            font-size: 11px;
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
         }
+
         a-scene {
             position: absolute;
             top: 0;
@@ -57,68 +154,136 @@
             width: 100%;
             height: 100%;
         }
+
+        @media (max-width: 480px) {
+            #login-box {
+                padding: 30px 22px;
+            }
+
+            .municipio-header h1 {
+                font-size: 21px;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <!-- Sistema de Login -->
+
+    <!-- Acceso institucional -->
     <div id="login-overlay">
         <div id="login-box">
-            <h2>Acceso SIAPA AR</h2>
+
+            <div class="municipio-header">
+
+                <div class="logo-container">
+                    <!-- Puedes colocar el escudo oficial de Chapala aquí -->
+                    <img src="escudo.png" alt="Escudo de Chapala"
+                         onerror="this.style.display='none';document.getElementById('logo-placeholder').style.display='block';">
+
+                    <div class="logo-placeholder" id="logo-placeholder" style="display:none;">
+                        🏛
+                    </div>
+                </div>
+
+                <h1>Gobierno Municipal</h1>
+                <h2>Chapala, Jalisco</h2>
+            </div>
+
+            <p class="welcome-text">
+                Bienvenido al sistema de realidad aumentada
+                del Municipio de Chapala.
+            </p>
+
             <input type="text" id="username" placeholder="Usuario">
+
             <input type="password" id="password" placeholder="Contraseña">
-            <button id="login-btn">Ingresar</button>
-            <p id="error-msg">Credenciales incorrectas</p>
+
+            <button id="login-btn">Ingresar al sistema</button>
+
+            <p id="error-msg">Usuario o contraseña incorrectos</p>
+
+            
+
         </div>
     </div>
 
-    <!-- Escena A-Frame (inicialmente oculta) -->
-    <a-scene id="ar-scene" mindar-image="imageTargetSrc: targets1.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" style="visibility: hidden;">
+    <!-- Escena de realidad aumentada -->
+    <a-scene
+        id="ar-scene"
+        mindar-image="imageTargetSrc: targets1.mind;"
+        color-space="sRGB"
+        renderer="colorManagement: true, physicallyCorrectLights"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+        style="visibility: hidden;">
+
         <a-assets>
-          <a-asset-item id="avatarModel" src="LogoSiapa3D.glb"></a-asset-item>>
+            <a-asset-item id="avatarModel" src="Chapala.glb"></a-asset-item>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
         <a-entity mindar-image-target="targetIndex: 0">
-            <a-gltf-model rotation="0 0 0" position="0 0 0" scale="0.5 0.5 0.5" src="#avatarModel" animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"></a-gltf-model>
+
+            <a-gltf-model
+                rotation="0 0 0"
+                position="0 0 0"
+                scale="70 70 70"
+                src="#avatarModel"
+                animation="property: position;
+                           to: 0 0.1 0.1;
+                           dur: 1000;
+                           easing: easeInOutQuad;
+                           loop: true;
+                           dir: alternate">
+            </a-gltf-model>
+
         </a-entity>
+
     </a-scene>
 
     <script>
-        // Credenciales válidas
+        // Credenciales de acceso
         const VALID_USER = "admin";
         const VALID_PASS = "1234";
 
         document.getElementById('login-btn').addEventListener('click', function() {
+
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
+
             if(username === VALID_USER && password === VALID_PASS) {
-                // Ocultar login
+
+                // Ocultar acceso
                 document.getElementById('login-overlay').style.display = 'none';
-                
-                // Mostrar escena AR
+
+                // Mostrar realidad aumentada
                 const scene = document.getElementById('ar-scene');
                 scene.style.visibility = 'visible';
-                
-                // Forzar inicio de MindAR
+
+                // Iniciar MindAR
                 if (scene.hasLoaded) {
                     startMindAR();
                 } else {
                     scene.addEventListener('loaded', startMindAR);
                 }
+
             } else {
                 document.getElementById('error-msg').style.display = 'block';
             }
         });
 
+        // Iniciar seguimiento AR
         function startMindAR() {
             const scene = document.getElementById('ar-scene');
             const arSystem = scene.systems['mindar-image-system'];
+
             if (arSystem) {
-                arSystem.start(); // Iniciar el seguimiento AR
+                arSystem.start();
             }
         }
     </script>
+
 </body>
 </html>
-
+```
